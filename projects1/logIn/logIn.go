@@ -21,7 +21,7 @@ func LogIn() bool {
 	password = strings.TrimSpace(password)
 	if UserExists(util.ReadCredFile(), userID, password) {
 		fmt.Println("Login successfully")
-		todo.TODO()
+		todo.TODO(userID)
 	} else {
 		fmt.Println("Login fail")
 		return false
