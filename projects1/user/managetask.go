@@ -1,20 +1,22 @@
-package main
+package user
 
 import (
 	"bufio"
 	"fmt"
 	"os"
-	"projects1/logIn"
-	"projects1/userEntryOptions"
+	"projects1/course"
+	"projects1/dailyStatus"
+	"projects1/todo"
 	"strings"
 )
 
-func main() {
+func ManageTask(uID string) {
 	for {
 		fmt.Println("Select an option:")
-		fmt.Println("1. Admin")
-		fmt.Println("2. User")
-		fmt.Println("3. Exit")
+		fmt.Println("1. Manage todo")
+		fmt.Println("2. Manage dailystatus")
+		fmt.Println("3. Manage course")
+		fmt.Println("4. Exit")
 
 		// Read user input
 		reader := bufio.NewReader(os.Stdin)
@@ -29,13 +31,14 @@ func main() {
 
 		switch input {
 		case "1":
-			logIn.LogIn("admin")
+			todo.TODO(uID)
 		case "2":
-			fmt.Println("You selected User.")
-			userEntryOptions.UserEntryOptions()
-		case "3":
+			dailyStatus.DS(uID)
+		case "4":
 			fmt.Println("Exiting...")
 			return
+		case "3":
+			course.Course(uID)
 		default:
 			fmt.Println("Invalid option. Please choose again.")
 		}

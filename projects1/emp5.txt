@@ -1,0 +1,3 @@
+course com | completed
+walk | not completed
+design patterns | not completed

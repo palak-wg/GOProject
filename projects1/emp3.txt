@@ -1,0 +1,3 @@
+eat | not completed
+sleep | not completed
+course complete | not completed

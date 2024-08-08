@@ -2,6 +2,7 @@ package util
 
 import (
 	"bufio"
+	"fmt"
 	"os"
 	"strings"
 )
@@ -28,6 +29,6 @@ func ReadCredFile() map[string]string {
 			cred[key] = value
 		}
 	}
-
+	fmt.Println(cred)
 	return cred
 }

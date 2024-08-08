@@ -1,4 +1,0 @@
-walk | not completed
-yoga | not completed
-course complete | completed
-assignment | completed

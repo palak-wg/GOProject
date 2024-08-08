@@ -1,4 +1,0 @@
-eat | completed
-read | completed
-sleep | not completed
-tea | not completed

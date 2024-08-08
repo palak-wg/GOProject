@@ -1,7 +1,6 @@
-package todo
+package course
 
 import (
-	"bufio"
 	"fmt"
 	"os"
 	"strings"
@@ -13,34 +12,26 @@ type Task struct {
 	Completed   bool
 }
 
-func TODO(uID string) {
-	fmt.Println("------------Welcome To ToDo CLI------------")
-	var taskFileName = uID + ".txt"
-	fmt.Println("------------Your TODO List------------")
-	listTodos(taskFileName)
+func Course(uID string) {
+	fmt.Println("------------Welcome To Course CLI------------")
+	var taskFileName = uID + "course.txt"
+	insertCourses(taskFileName)
+	fmt.Println("------------Your Course List------------")
+	listCourses(taskFileName)
 	for {
 		fmt.Println("\nChoose an option:")
-		fmt.Println("1. Insert a new to-do")
-		fmt.Println("2. Delete a to-do")
-		fmt.Println("3. List all to-dos")
-		fmt.Println("4. Mark a to-do as completed")
-		fmt.Println("5. Unmark a to-do as completed")
-		fmt.Println("6. Exit")
+		fmt.Println("1. List all courses")
+		fmt.Println("2. Mark a course as completed")
+		fmt.Println("3. Exit\n")
 
 		var choice int
 		fmt.Scan(&choice)
 		switch choice {
 		case 1:
-			insertTodo(taskFileName, "")
+			listCourses(taskFileName)
 		case 2:
-			deleteTodo(taskFileName, 0)
+			markCompleted(taskFileName, true)
 		case 3:
-			listTodos(taskFileName)
-		case 4:
-			markCompleted(taskFileName, 0, true)
-		case 5:
-			markCompleted(taskFileName, 0, false)
-		case 6:
 			fmt.Println("Exiting...")
 			return
 		default:
@@ -49,51 +40,23 @@ func TODO(uID string) {
 	}
 }
 
-func insertTodo(filename string, content string) {
-	fmt.Print("Enter the new to-do item: ")
-	scanner := bufio.NewScanner(os.Stdin)
-	scanner.Scan()
-	content = scanner.Text()
+func insertCourses(filename string) {
 
-	file, _ := os.OpenFile(filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	//if err != nil {
-	//	fmt.Println("Error opening file:", err)
-	//	return
-	//}
+	file, err := os.OpenFile(filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		fmt.Println("Error opening file:", err)
+		return
+	}
 	defer file.Close()
 
-	if _, err := file.WriteString(content + " | not completed\n"); err != nil {
-		fmt.Println("Error writing to file:", err)
+	for i := 1; i < 6; i++ {
+		if _, err := file.WriteString("mod " + string(rune(i)) + " | not completed\n"); err != nil {
+			fmt.Println("Error writing to file:", err)
+		}
 	}
-	fmt.Println("To-do added.")
 }
 
-func deleteTodo(filename string, index int) {
-	fmt.Print("Enter the number of the to-do item to delete: ")
-	fmt.Scan(&index)
-
-	tasks, err := readTasks(filename)
-	if err != nil {
-		fmt.Println("Error reading file:", err)
-		return
-	}
-
-	if index <= 0 || index > len(tasks) {
-		fmt.Println("Invalid number.")
-		return
-	}
-
-	tasks = append(tasks[:index-1], tasks[index:]...)
-	err = writeTasks(filename, tasks)
-	if err != nil {
-		fmt.Println("Error writing file:", err)
-		return
-	}
-
-	fmt.Println("To-do deleted.")
-}
-
-func listTodos(filename string) {
+func listCourses(filename string) {
 	tasks, err := readTasks(filename)
 	if err != nil {
 		fmt.Println("Error reading file:", err)
@@ -101,11 +64,11 @@ func listTodos(filename string) {
 	}
 
 	if len(tasks) == 0 {
-		fmt.Println("No to-dos found.")
+		fmt.Println("No course found.")
 		return
 	}
 
-	fmt.Println("To-do list:")
+	fmt.Println("course list:")
 	for i, task := range tasks {
 		status := "not completed"
 		if task.Completed {
@@ -133,8 +96,9 @@ func calculateProgress(tasks []Task) float64 {
 	return (float64(completed) / float64(total)) * 100
 }
 
-func markCompleted(filename string, num int, completed bool) {
+func markCompleted(filename string, completed bool) {
 	fmt.Print("Enter the number of the to-do item to update: ")
+	var num int
 	fmt.Scan(&num)
 
 	tasks, err := readTasks(filename)
@@ -163,10 +127,10 @@ func markCompleted(filename string, num int, completed bool) {
 }
 
 func readTasks(filename string) ([]Task, error) {
-	file, _ := os.ReadFile(filename)
-	//if err != nil {
-	//	return nil, err
-	//}
+	file, err := os.ReadFile(filename)
+	if err != nil {
+		return nil, err
+	}
 
 	var tasks []Task
 	lines := strings.Split(string(file), "\n")
@@ -187,10 +151,10 @@ func readTasks(filename string) ([]Task, error) {
 }
 
 func writeTasks(filename string, tasks []Task) error {
-	file, _ := os.Create(filename)
-	//if err != nil {
-	//	return err
-	//}
+	file, err := os.Create(filename)
+	if err != nil {
+		return err
+	}
 	defer file.Close()
 
 	for _, task := range tasks {
